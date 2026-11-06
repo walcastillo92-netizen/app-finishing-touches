@@ -25,11 +25,11 @@ function ResetPage() {
 
   async function guardar(e: React.FormEvent) {
     e.preventDefault();
-    if (pass.length < 8) return toast.error("La contraseña debe tener al menos 8 caracteres");
+    if (pass.length < 8) { toast.error("La contraseña debe tener al menos 8 caracteres"); return; }
     setCargando(true);
     const { error } = await supabase.auth.updateUser({ password: pass });
     setCargando(false);
-    if (error) return toast.error("El enlace venció o no es válido. Pedí uno nuevo.");
+    if (error) { toast.error("El enlace venció o no es válido. Pedí uno nuevo."); return; }
     toast.success("¡Listo! Ya podés usar tu nueva contraseña.");
     navigate({ to: "/" });
   }

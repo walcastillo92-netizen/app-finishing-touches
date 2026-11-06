@@ -39,7 +39,7 @@ function MisPublicaciones() {
   async function cambiar(id: string, c: Cambio, msg: string, confirmar?: string) {
     if (confirmar && !window.confirm(confirmar)) return;
     const { error } = await supabase.from("publicaciones").update(c).eq("id", id);
-    if (error) return toast.error("No pudimos actualizar: " + error.message);
+    if (error) { toast.error("No pudimos actualizar: " + error.message); return; }
     toast.success(msg);
     qc.invalidateQueries({ queryKey: ["mis-publicaciones", userId] });
   }
