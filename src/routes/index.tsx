@@ -8,15 +8,15 @@ import { PubCard, type PubResumen } from "@/components/PubCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type Busqueda = { q?: string; cat?: string; zona?: string; modo?: string; cond?: string };
+type Busqueda = { q?: string | undefined; cat?: string | undefined; zona?: string | undefined; modo?: string | undefined; cond?: string | undefined };
 
 export const Route = createFileRoute("/")({
   validateSearch: (s: Record<string, unknown>): Busqueda => ({
-    q: typeof s.q === "string" && s.q ? s.q : undefined,
-    cat: typeof s.cat === "string" && s.cat ? s.cat : undefined,
-    zona: typeof s.zona === "string" && s.zona ? s.zona : undefined,
-    modo: typeof s.modo === "string" && s.modo ? s.modo : undefined,
-    cond: typeof s.cond === "string" && s.cond ? s.cond : undefined,
+    q: typeof s["q"] === "string" && s["q"] ? s["q"] : undefined,
+    cat: typeof s["cat"] === "string" && s["cat"] ? s["cat"] : undefined,
+    zona: typeof s["zona"] === "string" && s["zona"] ? s["zona"] : undefined,
+    modo: typeof s["modo"] === "string" && s["modo"] ? s["modo"] : undefined,
+    cond: typeof s["cond"] === "string" && s["cond"] ? s["cond"] : undefined,
   }),
   head: () => ({
     meta: [

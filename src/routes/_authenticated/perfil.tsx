@@ -50,7 +50,7 @@ function Perfil() {
 
   async function guardar(e: React.FormEvent) {
     e.preventDefault();
-    if (f.nombre_publico.trim().length < 2) return toast.error("El nombre debe tener al menos 2 letras");
+    if (f.nombre_publico.trim().length < 2) { toast.error("El nombre debe tener al menos 2 letras"); return; }
     setGuardando(true);
     const { error } = await supabase
       .from("perfiles")
@@ -62,7 +62,7 @@ function Perfil() {
       })
       .eq("id", userId);
     setGuardando(false);
-    if (error) return toast.error("No pudimos guardar: " + error.message);
+    if (error) { toast.error("No pudimos guardar: " + error.message); return; }
     toast.success("Perfil guardado");
     qc.invalidateQueries({ queryKey: ["perfil", userId] });
   }

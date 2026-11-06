@@ -12,8 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/_authenticated/publicar")({
-  validateSearch: (s: Record<string, unknown>): { id?: string } => ({
-    id: typeof s.id === "string" ? s.id : undefined,
+  validateSearch: (s: Record<string, unknown>): { id?: string | undefined } => ({
+    id: typeof s["id"] === "string" ? s["id"] : undefined,
   }),
   head: () => ({
     meta: [
@@ -147,7 +147,7 @@ function Publicar() {
   async function subirFotos(files: FileList) {
     if (!id) return;
     const lista = Array.from(files).slice(0, MAX_FOTOS - fotos.length);
-    if (!lista.length) return toast.error(`Máximo ${MAX_FOTOS} fotos`);
+    if (!lista.length) { toast.error(`Máximo ${MAX_FOTOS} fotos`); return; }
     setSubiendo(lista.length);
     let orden = (fotos.at(-1)?.orden ?? -1) + 1;
     for (const file of lista) {
@@ -180,7 +180,7 @@ function Publicar() {
 
   async function borrarFoto(fid: string, path: string) {
     const { error } = await supabase.from("publicacion_fotos").delete().eq("id", fid);
-    if (error) return toast.error("No pudimos borrar la foto");
+    if (error) { toast.error("No pudimos borrar la foto"); return; }
     await supabase.storage.from("publicaciones").remove([path]);
     qc.invalidateQueries({ queryKey: ["mi-publicacion", id] });
   }
