@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedMisPublicacionesRouteImport } from './routes/_authenticated/mis-publicaciones'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
+import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticated/publicar'
 import { Route as PIdRouteImport } from './routes/p.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,9 +37,20 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMisPublicacionesRoute =
+  AuthenticatedMisPublicacionesRouteImport.update({
+    id: '/mis-publicaciones',
+    path: '/mis-publicaciones',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPublicarRoute = AuthenticatedPublicarRouteImport.update({
+  id: '/publicar',
+  path: '/publicar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const PIdRoute = PIdRouteImport.update({
@@ -50,14 +63,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/mis-publicaciones': typeof AuthenticatedMisPublicacionesRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/publicar': typeof AuthenticatedPublicarRoute
   '/p/$id': typeof PIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/mis-publicaciones': typeof AuthenticatedMisPublicacionesRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/publicar': typeof AuthenticatedPublicarRoute
   '/p/$id': typeof PIdRoute
 }
 export interface FileRoutesById {
@@ -66,21 +83,39 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/mis-publicaciones': typeof AuthenticatedMisPublicacionesRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/publicar': typeof AuthenticatedPublicarRoute
   '/p/$id': typeof PIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/perfil' | '/p/$id'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/mis-publicaciones'
+    | '/perfil'
+    | '/publicar'
+    | '/p/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/perfil' | '/p/$id'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/mis-publicaciones'
+    | '/perfil'
+    | '/publicar'
+    | '/p/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/mis-publicaciones'
     | '/_authenticated/perfil'
+    | '/_authenticated/publicar'
     | '/p/$id'
   fileRoutesById: FileRoutesById
 }
@@ -122,11 +157,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/mis-publicaciones': {
+      id: '/_authenticated/mis-publicaciones'
+      path: '/mis-publicaciones'
+      fullPath: '/mis-publicaciones'
+      preLoaderRoute: typeof AuthenticatedMisPublicacionesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/perfil': {
       id: '/_authenticated/perfil'
       path: '/perfil'
       fullPath: '/perfil'
       preLoaderRoute: typeof AuthenticatedPerfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/publicar': {
+      id: '/_authenticated/publicar'
+      path: '/publicar'
+      fullPath: '/publicar'
+      preLoaderRoute: typeof AuthenticatedPublicarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/p/$id': {
@@ -140,11 +189,15 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedMisPublicacionesRoute: typeof AuthenticatedMisPublicacionesRoute
   AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
+  AuthenticatedPublicarRoute: typeof AuthenticatedPublicarRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedMisPublicacionesRoute: AuthenticatedMisPublicacionesRoute,
   AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
+  AuthenticatedPublicarRoute: AuthenticatedPublicarRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
