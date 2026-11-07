@@ -88,3 +88,6 @@ jobs:
 
       - name: Compilar producción (Vite)
         run: bun run build
+
+      - name: Compilar vista de pruebas DEV
+        run: bun run build:dev
