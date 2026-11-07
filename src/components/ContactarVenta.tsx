@@ -28,6 +28,8 @@ export function ContactarVenta({ publicacionId, precioArs, titulo }: ContactarVe
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [contactoCreado, setContactoCreado] = useState(false);
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
 
   const contactar = useMutation({
     mutationFn: async () => {
@@ -39,14 +41,13 @@ export function ContactarVenta({ publicacionId, precioArs, titulo }: ContactarVe
     },
     onSuccess: (data) => {
       const wa = String((data as { whatsapp?: string } | null)?.whatsapp ?? "").replace(/\D/g, "");
-      if (wa && typeof window !== "undefined") {
+      if (wa) {
         const texto = `Hola, vi tu publicación «${titulo ?? "tu artículo"}» en MORENO CERCA y me interesa.`;
-        window.open(`https://wa.me/${wa}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+        setWhatsappUrl(`https://wa.me/${wa}?text=${encodeURIComponent(texto)}`);
       }
-      toast.success("Contacto iniciado. Coordiná el pago y encuentro con el vecino.");
+      setContactoCreado(true);
+      toast.success("Contacto iniciado. Ahora podés abrir WhatsApp para coordinar.");
       qc.invalidateQueries({ queryKey: ["contactos-venta"] });
-      setOpen(false);
-      navigate({ to: "/trueques" });
     },
     onError: (err: Error) => {
       toast.error(err.message || "No se pudo iniciar el contacto");
@@ -119,24 +120,50 @@ export function ContactarVenta({ publicacionId, precioArs, titulo }: ContactarVe
               </p>
             </div>
 
-            <div className="flex gap-2 pt-1">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                className="min-h-[44px] flex-1 rounded-full text-xs font-bold"
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="button"
-                disabled={contactar.isPending}
-                onClick={() => contactar.mutate()}
-                className="min-h-[44px] flex-1 rounded-full text-xs font-bold"
-              >
-                {contactar.isPending ? "Conectando…" : "Confirmar contacto"}
-              </Button>
-            </div>
+            {contactoCreado ? (
+              <div className="space-y-2 pt-1">
+                {whatsappUrl && (
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-[44px] items-center justify-center rounded-full bg-primary px-4 text-center text-sm font-bold text-primary-foreground"
+                  >
+                    Abrir WhatsApp para coordinar
+                  </a>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate({ to: "/trueques" });
+                  }}
+                  className="min-h-[44px] w-full rounded-full text-xs font-bold"
+                >
+                  Ver compras y ventas
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2 pt-1">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpen(false)}
+                  className="min-h-[44px] flex-1 rounded-full text-xs font-bold"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="button"
+                  disabled={contactar.isPending}
+                  onClick={() => contactar.mutate()}
+                  className="min-h-[44px] flex-1 rounded-full text-xs font-bold"
+                >
+                  {contactar.isPending ? "Conectando…" : "Confirmar contacto"}
+                </Button>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
