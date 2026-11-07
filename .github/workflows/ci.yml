@@ -26,7 +26,6 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
-      actions: write
     steps:
       - name: Descargar rama del PR
         uses: actions/checkout@v4
@@ -59,29 +58,19 @@ jobs:
             git push origin "HEAD:${BRANCH_NAME}"
           fi
 
-      - name: Lanzar CI sobre el commit corregido
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: ${{ github.head_ref }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          curl --fail-with-body -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${REPOSITORY}/actions/workflows/ci.yml/dispatches" \
-            -d "{\"ref\":\"${BRANCH_NAME}\"}"
-
   quality:
     name: Lint, tests y build
-    if: github.event_name != 'pull_request'
+    needs: format
+    if: always() && (github.event_name != 'pull_request' || needs.format.result == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
       contents: read
     steps:
-      - name: Descargar código
+      - name: Descargar código actualizado
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
 
       - name: Instalar Bun
         uses: oven-sh/setup-bun@v2
