@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Resolve illustrative demo photo paths locally through `demoImages` and `fotoUrl`; this avoids storage requests for nonexistent demo files.

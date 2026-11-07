@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => ({
+    redirect: typeof s["redirect"] === "string" ? s["redirect"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Entrar · MORENO CERCA" },
@@ -22,8 +25,15 @@ export const Route = createFileRoute("/auth")({
 
 type Modo = "entrar" | "crear" | "olvide";
 
+function destinoSeguro(r?: string) {
+  return r && r.startsWith("/") && !r.startsWith("//") && !r.startsWith("/auth") ? r : null;
+}
+
 function AuthPage() {
   const navigate = useNavigate();
+  const router = useRouter();
+  const destino = destinoSeguro(Route.useSearch().redirect);
+  const volver = (porDefecto: "/" | "/perfil") => (destino ? router.history.push(destino) : navigate({ to: porDefecto }));
   const [modo, setModo] = useState<Modo>("entrar");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -39,7 +49,7 @@ function AuthPage() {
       if (modo === "entrar") {
         const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
         if (error) throw new Error(error.message.includes("Invalid") ? "Email o contraseña incorrectos" : error.message);
-        navigate({ to: "/" });
+        volver("/");
       } else if (modo === "crear") {
         if (nombre.trim().length < 2) throw new Error("Escribí tu nombre (mínimo 2 letras)");
         if (pass.length < 8) throw new Error("La contraseña debe tener al menos 8 caracteres");
@@ -49,7 +59,7 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin, data: { nombre: nombre.trim() } },
         });
         if (error) throw error;
-        if (data.session) navigate({ to: "/perfil" });
+        if (data.session) volver("/perfil");
         else setAviso("Te mandamos un email para confirmar tu cuenta. Abrilo y después entrá.");
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {

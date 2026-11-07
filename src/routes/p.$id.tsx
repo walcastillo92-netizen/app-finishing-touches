@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { MapPin, Repeat, ShieldCheck, ArrowLeft, Pencil } from "lucide-react";
+import { MapPin, Repeat, ShieldCheck, ArrowLeft, Pencil, FlaskConical } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ESTADO_LABEL, fotoUrl, formatARS, MODALIDAD_LABEL, type ModalidadTrueque } from "@/lib/catalog";
 import { useSession } from "@/lib/session";
@@ -11,6 +11,8 @@ export const Route = createFileRoute("/p/$id")({
   head: () => ({
     meta: [
       { title: "Publicación · MORENO CERCA" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Mirá esta publicación de un vecino de Moreno y proponé un trueque." },
       { property: "og:title", content: "Publicación en MORENO CERCA" },
       { property: "og:description", content: "Intercambiá mano a mano o con diferencia en efectivo." },
@@ -60,11 +62,17 @@ function Detalle() {
           Estado: {ESTADO_LABEL[p.estado] ?? p.estado}. Solo vos podés verla.
         </p>
       )}
+      {p.es_demo && (
+        <p className="flex items-start gap-2 rounded-2xl border-2 border-dashed border-foreground/40 bg-muted px-4 py-3 text-sm font-semibold"><FlaskConical className="mt-0.5 h-4 w-4 shrink-0" />Publicación de demostración (BETA). Es un ejemplo de MORENO CERCA, no pertenece a ningún vecino y no admite contacto ni trueques.</p>
+      )}
       <div className="grid gap-6 md:grid-cols-2">
         <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto rounded-3xl">
           {fotos.length ? (
             fotos.map((f) => (
-              <img key={f.id} src={fotoUrl(f.storage_path)!} alt={p.titulo ?? ""} className="aspect-square w-full shrink-0 snap-center rounded-3xl object-cover" />
+              <div key={f.id} className="relative w-full shrink-0 snap-center">
+                <img src={fotoUrl(f.storage_path) ?? undefined} alt={p.titulo ?? ""} className="aspect-square w-full rounded-3xl object-cover" />
+                {p.es_demo && <span className="absolute right-3 top-3 rounded-md bg-foreground/80 px-2.5 py-1 text-xs font-extrabold tracking-wide text-primary-foreground">BETA · DEMO</span>}
+              </div>
             ))
           ) : (
             <div className="flex aspect-square w-full items-center justify-center rounded-3xl bg-muted text-muted-foreground">Sin fotos</div>
@@ -97,7 +105,7 @@ function Detalle() {
               <span className="text-xl font-bold">{formatARS(p.precio_ars)}</span>
             </p>
           )}
-          {esMia ? (
+          {p.es_demo ? null : esMia ? (
             <Button asChild variant="outline" className="h-12 w-full rounded-full">
               <Link to="/publicar" search={{ id: p.id }}><Pencil className="h-4 w-4" /> Editar mi publicación</Link>
             </Button>
@@ -105,7 +113,9 @@ function Detalle() {
             <ProponerTrueque publicacionId={p.id} vendedorId={p.vendedor_id} modalidadPub={modalidad} />
           ) : null}
           <div className="whitespace-pre-line rounded-2xl bg-card p-4 text-sm leading-relaxed">{p.descripcion}</div>
-          {p.perfiles && (
+          {p.es_demo ? (
+            <div className="rounded-2xl border bg-card p-4 text-sm"><p className="font-semibold">MORENO CERCA · Contenido de prueba (BETA)</p><p className="text-xs text-muted-foreground">Esta publicación no pertenece a un vecino real.</p></div>
+          ) : p.perfiles && (
             <div className="flex items-center gap-3 rounded-2xl border bg-card p-4">
               <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-muted font-bold">
                 {p.perfiles.avatar_url ? (

@@ -31,6 +31,7 @@ function MisPublicaciones() {
         .from("publicaciones")
         .select("id, titulo, estado, disponibilidad, faltantes, actualizado_en, publicacion_fotos(storage_path, orden)")
         .eq("vendedor_id", userId)
+        .eq("es_demo", false)
         .neq("estado", "eliminada")
         .order("actualizado_en", { ascending: false });
       if (error) throw error;
