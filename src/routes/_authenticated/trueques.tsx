@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Bell } from "lucide-react";
+import { Bell, Repeat, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AvisoSeguridad } from "@/components/AvisoSeguridad";
+import { ContactosVenta } from "@/components/ContactosVenta";
 import { Negociacion } from "@/components/Negociacion";
 import { sb, PROPUESTA_SELECT, type Propuesta } from "@/lib/trueques";
 
 export const Route = createFileRoute("/_authenticated/trueques")({
-  head: () => ({ meta: [{ title: "Mis negociaciones · MORENO CERCA" }] }),
+  head: () => ({ meta: [{ title: "Trueques y compras · MORENO CERCA" }] }),
   component: Trueques,
 });
 
@@ -15,6 +18,8 @@ interface Aviso { id: string; titulo: string; leida: boolean; creado_en: string 
 function Trueques() {
   const { userId } = Route.useRouteContext();
   const qc = useQueryClient();
+  const [tab, setTab] = useState<"trueques" | "ventas">("trueques");
+
   const { data: props, isLoading } = useQuery({
     queryKey: ["propuestas", userId],
     refetchInterval: 20000,
@@ -55,9 +60,13 @@ function Trueques() {
       </section>
     ) : null;
 
+  const tabCls = (on: boolean) =>
+    `flex min-h-[44px] items-center gap-2 rounded-full px-5 text-sm font-bold transition-all ${on ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground"}`;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <h1 className="font-display text-2xl font-extrabold">Mis negociaciones</h1>
+      <AvisoSeguridad variante="banner" />
       {!!avisos?.length && (
         <section className="rounded-3xl border bg-card p-4">
           <div className="mb-2 flex items-center justify-between">
@@ -69,16 +78,26 @@ function Trueques() {
           </ul>
         </section>
       )}
-      {isLoading && <div className="h-24 animate-pulse rounded-3xl bg-muted" />}
-      {!isLoading && !lista.length && (
-        <div className="rounded-3xl border bg-card p-8 text-center">
-          <p className="font-display text-xl font-bold">Todavía no tenés trueques</p>
-          <p className="mt-1 text-sm text-muted-foreground">Entrá a una publicación y tocá «Proponer trueque».</p>
-        </div>
+      <div className="flex gap-2">
+        <button type="button" className={tabCls(tab === "trueques")} onClick={() => setTab("trueques")}><Repeat className="h-4 w-4" /> Trueques</button>
+        <button type="button" className={tabCls(tab === "ventas")} onClick={() => setTab("ventas")}><ShoppingBag className="h-4 w-4" /> Compras y ventas</button>
+      </div>
+      {tab === "ventas" ? (
+        <ContactosVenta userId={userId} />
+      ) : (
+        <>
+          {isLoading && <div className="h-24 animate-pulse rounded-3xl bg-muted" />}
+          {!isLoading && !lista.length && (
+            <div className="rounded-3xl border bg-card p-8 text-center">
+              <p className="font-display text-xl font-bold">Todavía no tenés trueques</p>
+              <p className="mt-1 text-sm text-muted-foreground">Entrá a una publicación y tocá «Proponer trueque».</p>
+            </div>
+          )}
+          <Grupo titulo="Esperan tu respuesta" items={responder} />
+          <Grupo titulo="En curso" items={enCurso} />
+          <Grupo titulo="Historial" items={historial} />
+        </>
       )}
-      <Grupo titulo="Esperan tu respuesta" items={responder} />
-      <Grupo titulo="En curso" items={enCurso} />
-      <Grupo titulo="Historial" items={historial} />
     </div>
   );
 }
