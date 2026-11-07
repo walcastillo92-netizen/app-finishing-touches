@@ -36,3 +36,17 @@ export interface Propuesta {
   actualizado_en: string;
   destino: { id: string; titulo: string } | null;
   ofrecida: { id: string; titulo: string } | null;
+  prop: { nombre_publico: string } | null;
+  dest: { nombre_publico: string } | null;
+}
+
+export const PROPUESTA_SELECT = "*, destino:publicaciones!propuestas_trueque_publicacion_destino_fkey(id, titulo), ofrecida:publicaciones!propuestas_trueque_publicacion_ofrecida_fkey(id, titulo), prop:perfiles!propuestas_trueque_proponente_fkey(nombre_publico), dest:perfiles!propuestas_trueque_destinatario_fkey(nombre_publico)";
+export const ESTADO_PROPUESTA_LABEL: Record<EstadoPropuesta, string> = {
+  pendiente: "Pendiente", aceptada: "Aceptada", rechazada: "Rechazada",
+  contrapropuesta: "Contrapropuesta", confirmada: "Confirmada", cancelada: "Cancelada",
+};
+export const LEYENDA_EFECTIVO = "La diferencia en efectivo se acuerda entre vecinos, fuera de la app.";
+export const ACLARACION_DINERO = "El precio de venta no es la diferencia de un trueque.";
+export function resumenOferta(p: Propuesta) {
+  return p.ofrecida?.titulo ?? p.oferta_texto ?? "Propuesta de trueque";
+}
