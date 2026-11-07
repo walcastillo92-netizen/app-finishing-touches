@@ -33,7 +33,7 @@ function AuthPage() {
   const navigate = useNavigate();
   const router = useRouter();
   const destino = destinoSeguro(Route.useSearch().redirect);
-  const volver = (porDefecto: "/" | "/perfil") => (destino ? router.history.push(destino) : navigate({ to: porDefecto }));
+  const volver = (porDefecto: "/" | "/perfil" | "/bienvenida") => (destino ? router.history.push(destino) : navigate({ to: porDefecto }));
   const [modo, setModo] = useState<Modo>("entrar");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -59,7 +59,7 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin, data: { nombre: nombre.trim() } },
         });
         if (error) throw error;
-        if (data.session) volver("/perfil");
+        if (data.session) volver("/bienvenida");
         else setAviso("Te mandamos un email para confirmar tu cuenta. Abrilo y después entrá.");
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
