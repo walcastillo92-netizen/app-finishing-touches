@@ -6,6 +6,7 @@ import { ESTADO_LABEL, fotoUrl, formatARS, MODALIDAD_LABEL, type ModalidadTruequ
 import { useSession } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 import { ProponerTrueque } from "@/components/ProponerTrueque";
+import { ContactarVenta } from "@/components/ContactarVenta";
 import { AvisoSeguridad } from "@/components/AvisoSeguridad";
 import { ReportarModal } from "@/components/ReportarModal";
 import { ReputacionBadge } from "@/components/ReputacionBadge";
@@ -119,9 +120,14 @@ function Detalle() {
             <Button asChild variant="outline" className="h-12 w-full rounded-full">
               <Link to="/publicar" search={{ id: p.id }}><Pencil className="h-4 w-4" /> Editar mi publicación</Link>
             </Button>
-          ) : modalidad ? (
-            <ProponerTrueque publicacionId={p.id} vendedorId={p.vendedor_id} modalidadPub={modalidad} />
-          ) : null}
+          ) : (
+            <div className="space-y-2">
+              {modalidad && <ProponerTrueque publicacionId={p.id} vendedorId={p.vendedor_id} modalidadPub={modalidad} />}
+              {p.precio_ars != null && p.precio_ars > 0 && (
+                <ContactarVenta publicacionId={p.id} vendedorId={p.vendedor_id} precioArs={p.precio_ars} titulo={p.titulo} />
+              )}
+            </div>
+          )}
           <div className="whitespace-pre-line rounded-2xl bg-card p-4 text-sm leading-relaxed">{p.descripcion}</div>
           {p.es_demo ? (
             <div className="rounded-2xl border bg-card p-4 text-sm"><p className="font-semibold">MORENO CERCA · Contenido de prueba (BETA)</p><p className="text-xs text-muted-foreground">Esta publicación no pertenece a un vecino real.</p></div>
