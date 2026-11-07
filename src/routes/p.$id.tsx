@@ -6,6 +6,10 @@ import { ESTADO_LABEL, fotoUrl, formatARS, MODALIDAD_LABEL, type ModalidadTruequ
 import { useSession } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 import { ProponerTrueque } from "@/components/ProponerTrueque";
+import { AvisoSeguridad } from "@/components/AvisoSeguridad";
+import { ReportarModal } from "@/components/ReportarModal";
+import { ReputacionBadge } from "@/components/ReputacionBadge";
+import { obtenerReputacionUsuario } from "@/lib/reputacion";
 
 export const Route = createFileRoute("/p/$id")({
   head: () => ({
@@ -37,6 +41,12 @@ function Detalle() {
       if (error) throw error;
       return data;
     },
+  });
+
+  const { data: reputacion } = useQuery({
+    queryKey: ["reputacion-vendedor", p?.vendedor_id],
+    queryFn: () => obtenerReputacionUsuario(p!.vendedor_id),
+    enabled: Boolean(p?.vendedor_id && !p.es_demo),
   });
 
   if (isLoading) return <div className="aspect-square max-w-xl animate-pulse rounded-3xl bg-muted" />;
@@ -129,11 +139,18 @@ function Detalle() {
                 {p.perfiles.nivel_verificacion !== "ninguna" && (
                   <p className="flex items-center gap-1 text-xs font-semibold text-primary"><ShieldCheck className="h-3.5 w-3.5" /> Verificado</p>
                 )}
+                <ReputacionBadge promedio={reputacion?.promedio ?? null} cantidad={reputacion?.cantidad ?? 0} tamano="sm" />
               </div>
             </div>
           )}
         </div>
       </div>
+      {!p.es_demo && (
+        <div className="space-y-3">
+          <AvisoSeguridad variante="completo" />
+          {!esMia && <ReportarModal publicacionId={p.id} titulo={p.titulo} />}
+        </div>
+      )}
     </div>
   );
 }
