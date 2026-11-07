@@ -26,6 +26,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
+      actions: write
     steps:
       - name: Descargar rama del PR
         uses: actions/checkout@v4
