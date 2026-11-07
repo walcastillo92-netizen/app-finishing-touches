@@ -36,17 +36,50 @@ export interface Propuesta {
   actualizado_en: string;
   destino: { id: string; titulo: string } | null;
   ofrecida: { id: string; titulo: string } | null;
-  prop: { nombre_publico: string } | null;
-  dest: { nombre_publico: string } | null;
+  prop: { id: string; nombre_publico: string } | null;
+  dest: { id: string; nombre_publico: string } | null;
 }
 
-export const PROPUESTA_SELECT = "*, destino:publicaciones!propuestas_trueque_publicacion_destino_fkey(id, titulo), ofrecida:publicaciones!propuestas_trueque_publicacion_ofrecida_fkey(id, titulo), prop:perfiles!propuestas_trueque_proponente_fkey(nombre_publico), dest:perfiles!propuestas_trueque_destinatario_fkey(nombre_publico)";
+export const PROPUESTA_SELECT =
+  "*, destino:publicaciones!propuestas_trueque_publicacion_destino_fkey(id, titulo), " +
+  "ofrecida:publicaciones!propuestas_trueque_publicacion_ofrecida_fkey(id, titulo), " +
+  "prop:perfiles!propuestas_trueque_proponente_fkey(id, nombre_publico), " +
+  "dest:perfiles!propuestas_trueque_destinatario_fkey(id, nombre_publico)";
+
 export const ESTADO_PROPUESTA_LABEL: Record<EstadoPropuesta, string> = {
-  pendiente: "Pendiente", aceptada: "Aceptada", rechazada: "Rechazada",
-  contrapropuesta: "Contrapropuesta", confirmada: "Confirmada", cancelada: "Cancelada",
+  pendiente: "Pendiente",
+  aceptada: "Aceptada · a coordinar",
+  rechazada: "Rechazada",
+  contrapropuesta: "Contraofertada",
+  confirmada: "Intercambio concretado",
+  cancelada: "Cancelada",
 };
-export const LEYENDA_EFECTIVO = "La diferencia en efectivo se acuerda entre vecinos, fuera de la app.";
-export const ACLARACION_DINERO = "El precio de venta no es la diferencia de un trueque.";
-export function resumenOferta(p: Propuesta) {
-  return p.ofrecida?.titulo ?? p.oferta_texto ?? "Propuesta de trueque";
-}
+
+export const LEYENDA_EFECTIVO =
+  "La compensación monetaria es voluntaria y solo puede ser ofrecida por quien paga el dinero. Moreno Cerca protege el trueque comunitario.";
+
+export const ACLARACION_DINERO =
+  "MORENO CERCA facilita el contacto entre vecinos, pero no cobra, recibe, retiene ni custodia dinero. El pago se acuerda y realiza directamente entre las partes.";
+
+export const MOTIVOS_DENUNCIA: Record<string, string> = {
+  estafa: "Intento de estafa",
+  enganoso: "Publicación engañosa",
+  ofensivo: "Trato ofensivo",
+  spam: "Spam",
+  prohibido: "Producto prohibido",
+  otro: "Otro motivo",
+};
+
+/** Describe en una frase quién pone qué, para que no haya ambigüedad. */
+export function resumenOferta(p: Propuesta): string {
+  const quien = p.prop?.nombre_publico ?? "El vecino";
+  const otro = p.dest?.nombre_publico ?? "el otro vecino";
+  const cosa = p.ofrecida?.titulo ?? p.oferta_texto ?? "algo a convenir";
+  if (p.modalidad === "con_efectivo" && p.efectivo_monto) {
+    const monto = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(p.efectivo_monto);
+    const paga = p.paga === "proponente" ? quien : otro;
+    const cobra = p.paga === "proponente" ? otro : quien;
+    return `${quien} ofrece «${cosa}». ${paga} suma ${monto} a favor de ${cobra}.`;
+  }
+  return `${quien} ofrece «${cosa}» mano a mano, sin dinero.`;
+  }
