@@ -21,6 +21,8 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "MORENO CERCA · Trueques entre vecinos de Moreno" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
         content: "Comprá, vendé e intercambiá con vecinos de Moreno. Mano a mano o con diferencia en efectivo.",

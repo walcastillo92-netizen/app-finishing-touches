@@ -15,6 +15,8 @@ export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
     meta: [
       { title: "Mi perfil · MORENO CERCA" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Editá tu perfil público en MORENO CERCA." },
       { property: "og:title", content: "Mi perfil · MORENO CERCA" },
       { property: "og:description", content: "Tu presentación para los vecinos." },

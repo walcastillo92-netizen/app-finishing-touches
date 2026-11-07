@@ -18,6 +18,8 @@ export const Route = createFileRoute("/_authenticated/publicar")({
   head: () => ({
     meta: [
       { title: "Publicar · MORENO CERCA" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Publicá un producto o servicio para intercambiar o vender en Moreno." },
       { property: "og:title", content: "Publicar · MORENO CERCA" },
       { property: "og:description", content: "Ofrecé lo que ya no usás y contá qué buscás a cambio." },

@@ -11,6 +11,8 @@ export const Route = createFileRoute("/p/$id")({
   head: () => ({
     meta: [
       { title: "Publicación · MORENO CERCA" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Mirá esta publicación de un vecino de Moreno y proponé un trueque." },
       { property: "og:title", content: "Publicación en MORENO CERCA" },
       { property: "og:description", content: "Intercambiá mano a mano o con diferencia en efectivo." },
