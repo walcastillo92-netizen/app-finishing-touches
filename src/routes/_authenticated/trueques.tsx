@@ -6,14 +6,7 @@ import { Negociacion } from "@/components/Negociacion";
 import { sb, PROPUESTA_SELECT, type Propuesta } from "@/lib/trueques";
 
 export const Route = createFileRoute("/_authenticated/trueques")({
-  head: () => ({ meta: [
-    { title: "Mis negociaciones · MORENO CERCA" },
-    { name: "description", content: "Revisá tus propuestas y acuerdos de trueque con vecinos de Moreno." },
-    { property: "og:title", content: "Mis negociaciones · MORENO CERCA" },
-    { property: "og:description", content: "Tus propuestas y acuerdos de trueque entre vecinos." },
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary_large_image" },
-  ] }),
+  head: () => ({ meta: [{ title: "Mis negociaciones · MORENO CERCA" }] }),
   component: Trueques,
 });
 
@@ -40,22 +33,52 @@ function Trueques() {
       return data as Aviso[];
     },
   });
-  const leer = useMutation({
+  const leerTodo = useMutation({
     mutationFn: async () => {
-      const { error } = await sb.from("notificaciones").update({ leida: true }).eq("usuario_id", userId).eq("leida", false);
+      const { error } = await sb.from("notificaciones").update({ leida: true }).eq("leida", false);
       if (error) throw error;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["avisos"] });
-      qc.invalidateQueries({ queryKey: ["avisos-no-leidos"] });
-    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["avisos"] }); qc.invalidateQueries({ queryKey: ["avisos-no-leidos"] }); },
   });
-  return <div className="space-y-5">
-    <h1 className="font-display text-3xl font-extrabold">Mis negociaciones</h1>
-    {!!avisos?.length && <section className="space-y-2">
-      <div className="flex items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-bold"><Bell className="h-4 w-4" /> Avisos</h2><Button variant="ghost" disabled={leer.isPending} onClick={() => leer.mutate()}>Marcar como leídos</Button></div>
-      {avisos.map((a) => <p key={a.id} className={`text-sm ${a.leida ? "text-muted-foreground" : "font-semibold"}`}>{a.titulo}</p>)}
-    </section>}
-    {isLoading ? <p className="text-muted-foreground">Cargando negociaciones…</p> : !props?.length ? <p className="text-muted-foreground">Todavía no tenés propuestas de trueque.</p> : <div className="space-y-3">{props.map((p) => <Negociacion key={p.id} p={p} me={userId} />)}</div>}
-  </div>;
+
+  const lista = props ?? [];
+  const responder = lista.filter((p) => p.estado === "pendiente" && p.destinatario === userId);
+  const enCurso = lista.filter((p) => p.estado === "aceptada" || (p.estado === "pendiente" && p.proponente === userId));
+  const historial = lista.filter((p) => !responder.includes(p) && !enCurso.includes(p));
+  const noLeidos = avisos?.filter((a) => !a.leida).length ?? 0;
+
+  const Grupo = ({ titulo, items }: { titulo: string; items: Propuesta[] }) =>
+    items.length ? (
+      <section className="space-y-2">
+        <h2 className="font-display text-lg font-bold">{titulo}</h2>
+        {items.map((p) => <Negociacion key={p.id} p={p} me={userId} />)}
+      </section>
+    ) : null;
+
+  return (
+    <div className="space-y-6">
+      <h1 className="font-display text-2xl font-extrabold">Mis negociaciones</h1>
+      {!!avisos?.length && (
+        <section className="rounded-3xl border bg-card p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="flex items-center gap-2 font-bold"><Bell className="h-4 w-4" /> Avisos {noLeidos > 0 && <span className="rounded-full bg-primary px-2 text-xs text-primary-foreground">{noLeidos}</span>}</p>
+            {noLeidos > 0 && <Button variant="ghost" size="sm" onClick={() => leerTodo.mutate()}>Marcar leídos</Button>}
+          </div>
+          <ul className="space-y-1 text-sm">
+            {avisos.slice(0, 5).map((a) => <li key={a.id} className={a.leida ? "text-muted-foreground" : "font-semibold"}>{a.titulo}</li>)}
+          </ul>
+        </section>
+      )}
+      {isLoading && <div className="h-24 animate-pulse rounded-3xl bg-muted" />}
+      {!isLoading && !lista.length && (
+        <div className="rounded-3xl border bg-card p-8 text-center">
+          <p className="font-display text-xl font-bold">Todavía no tenés trueques</p>
+          <p className="mt-1 text-sm text-muted-foreground">Entrá a una publicación y tocá «Proponer trueque».</p>
+        </div>
+      )}
+      <Grupo titulo="Esperan tu respuesta" items={responder} />
+      <Grupo titulo="En curso" items={enCurso} />
+      <Grupo titulo="Historial" items={historial} />
+    </div>
+  );
 }
