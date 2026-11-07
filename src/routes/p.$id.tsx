@@ -4,15 +4,13 @@ import { MapPin, Repeat, ShieldCheck, ArrowLeft, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ESTADO_LABEL, fotoUrl, formatARS, MODALIDAD_LABEL, type ModalidadTrueque } from "@/lib/catalog";
 import { useSession } from "@/lib/session";
-import { ProponerTrueque } from "@/components/ProponerTrueque";
 import { Button } from "@/components/ui/button";
+import { ProponerTrueque } from "@/components/ProponerTrueque";
 
 export const Route = createFileRoute("/p/$id")({
   head: () => ({
     meta: [
       { title: "Publicación · MORENO CERCA" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Mirá esta publicación de un vecino de Moreno y proponé un trueque." },
       { property: "og:title", content: "Publicación en MORENO CERCA" },
       { property: "og:description", content: "Intercambiá mano a mano o con diferencia en efectivo." },
@@ -66,7 +64,7 @@ function Detalle() {
         <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto rounded-3xl">
           {fotos.length ? (
             fotos.map((f) => (
-              <img key={f.id} src={fotoUrl(f.storage_path) ?? undefined} alt={p.titulo ?? ""} className="aspect-square w-full shrink-0 snap-center rounded-3xl object-cover" />
+              <img key={f.id} src={fotoUrl(f.storage_path)!} alt={p.titulo ?? ""} className="aspect-square w-full shrink-0 snap-center rounded-3xl object-cover" />
             ))
           ) : (
             <div className="flex aspect-square w-full items-center justify-center rounded-3xl bg-muted text-muted-foreground">Sin fotos</div>
@@ -111,7 +109,7 @@ function Detalle() {
             <div className="flex items-center gap-3 rounded-2xl border bg-card p-4">
               <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-muted font-bold">
                 {p.perfiles.avatar_url ? (
-                  <img src={fotoUrl(p.perfiles.avatar_url, "avatares") ?? undefined} alt="" className="h-full w-full object-cover" />
+                  <img src={fotoUrl(p.perfiles.avatar_url, "avatares")!} alt="" className="h-full w-full object-cover" />
                 ) : (
                   p.perfiles.nombre_publico[0]
                 )}
