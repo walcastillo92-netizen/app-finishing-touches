@@ -86,9 +86,7 @@ export function CalificarModal({
       onOpenChange(false);
       setComentario("");
     } catch (err: unknown) {
-      toast.error(
-        err instanceof Error ? err.message : "No se pudo registrar la calificación",
-      );
+      toast.error(err instanceof Error ? err.message : "No se pudo registrar la calificación");
     } finally {
       setEnviando(false);
     }
