@@ -10,12 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const sb = supabase as unknown as SupabaseClient<any>;
 
 export type EstadoPropuesta =
-  | "pendiente"
-  | "aceptada"
-  | "rechazada"
-  | "contrapropuesta"
-  | "confirmada"
-  | "cancelada";
+  "pendiente" | "aceptada" | "rechazada" | "contrapropuesta" | "confirmada" | "cancelada";
 
 export interface Propuesta {
   id: string;
@@ -76,10 +71,14 @@ export function resumenOferta(p: Propuesta): string {
   const otro = p.dest?.nombre_publico ?? "el otro vecino";
   const cosa = p.ofrecida?.titulo ?? p.oferta_texto ?? "algo a convenir";
   if (p.modalidad === "con_efectivo" && p.efectivo_monto) {
-    const monto = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(p.efectivo_monto);
+    const monto = new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0,
+    }).format(p.efectivo_monto);
     const paga = p.paga === "proponente" ? quien : otro;
     const cobra = p.paga === "proponente" ? otro : quien;
     return `${quien} ofrece «${cosa}». ${paga} suma ${monto} a favor de ${cobra}.`;
   }
   return `${quien} ofrece «${cosa}» mano a mano, sin dinero.`;
-  }
+}

@@ -16,7 +16,11 @@ export async function procesarImagen(file: File, max = 1600): Promise<ImagenProc
   canvas.height = alto;
   canvas.getContext("2d")!.drawImage(bmp, 0, 0, ancho, alto);
   const blob = await new Promise<Blob>((res, rej) =>
-    canvas.toBlob((b) => (b ? res(b) : rej(new Error("No se pudo procesar la foto"))), "image/jpeg", 0.82),
+    canvas.toBlob(
+      (b) => (b ? res(b) : rej(new Error("No se pudo procesar la foto"))),
+      "image/jpeg",
+      0.82,
+    ),
   );
   return { blob, ancho, alto };
 }

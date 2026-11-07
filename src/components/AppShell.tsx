@@ -28,7 +28,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     enabled: !!session,
     refetchInterval: 30000,
     queryFn: async () => {
-      const { count } = await sb.from("notificaciones").select("id", { count: "exact", head: true }).eq("leida", false);
+      const { count } = await sb
+        .from("notificaciones")
+        .select("id", { count: "exact", head: true })
+        .eq("leida", false);
       return count ?? 0;
     },
   });
@@ -63,7 +66,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                 activeOptions={{ exact: n.to === "/" }}
               >
                 {n.label}
-                {n.to === "/trueques" && !!noLeidos && <span className="ml-1 rounded-full bg-primary px-1.5 text-xs text-primary-foreground">{noLeidos}</span>}
+                {n.to === "/trueques" && !!noLeidos && (
+                  <span className="ml-1 rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
+                    {noLeidos}
+                  </span>
+                )}
               </Link>
             ))}
           </nav>
@@ -90,11 +97,18 @@ export function AppShell({ children }: { children: ReactNode }) {
             activeProps={{ className: "text-primary" }}
             activeOptions={{ exact: n.to === "/" }}
           >
-            <span className="relative"><n.icon className="h-5 w-5" />{n.to === "/trueques" && !!noLeidos && <span className="absolute -right-2 -top-1.5 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{noLeidos}</span>}</span>
+            <span className="relative">
+              <n.icon className="h-5 w-5" />
+              {n.to === "/trueques" && !!noLeidos && (
+                <span className="absolute -right-2 -top-1.5 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">
+                  {noLeidos}
+                </span>
+              )}
+            </span>
             {n.label === "Mis publicaciones" ? "Mías" : n.label}
           </Link>
         ))}
       </nav>
     </div>
   );
-                }
+}

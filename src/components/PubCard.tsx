@@ -25,14 +25,21 @@ export function PubCard({ p }: { p: PubResumen }) {
     >
       <div className="relative aspect-square bg-muted">
         {url ? (
-          <img src={url} alt={p.titulo ?? ""} loading="lazy" className="h-full w-full object-cover" />
+          <img
+            src={url}
+            alt={p.titulo ?? ""}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
             <ImageOff className="h-8 w-8" />
           </div>
         )}
         {p.es_demo && (
-          <span className="absolute right-2 top-2 rounded-md bg-foreground/80 px-2 py-0.5 text-[11px] font-extrabold tracking-wide text-primary-foreground">BETA · DEMO</span>
+          <span className="absolute right-2 top-2 rounded-md bg-foreground/80 px-2 py-0.5 text-[11px] font-extrabold tracking-wide text-primary-foreground">
+            BETA · DEMO
+          </span>
         )}
         {!p.es_demo && esNueva(p.publicado_en) && (
           <span className="absolute left-2 top-2 rounded-full bg-secondary px-2 py-0.5 text-[11px] font-bold text-secondary-foreground">

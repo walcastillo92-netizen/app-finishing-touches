@@ -15,9 +15,15 @@ export const Route = createFileRoute("/auth")({
       { title: "Entrar · MORENO CERCA" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "description", content: "Entrá o creá tu cuenta en MORENO CERCA para publicar e intercambiar." },
+      {
+        name: "description",
+        content: "Entrá o creá tu cuenta en MORENO CERCA para publicar e intercambiar.",
+      },
       { property: "og:title", content: "Entrar · MORENO CERCA" },
-      { property: "og:description", content: "Creá tu cuenta gratis y empezá a intercambiar con vecinos." },
+      {
+        property: "og:description",
+        content: "Creá tu cuenta gratis y empezá a intercambiar con vecinos.",
+      },
     ],
   }),
   component: AuthPage,
@@ -33,7 +39,8 @@ function AuthPage() {
   const navigate = useNavigate();
   const router = useRouter();
   const destino = destinoSeguro(Route.useSearch().redirect);
-  const volver = (porDefecto: "/" | "/perfil" | "/bienvenida") => (destino ? router.history.push(destino) : navigate({ to: porDefecto }));
+  const volver = (porDefecto: "/" | "/perfil" | "/bienvenida") =>
+    destino ? router.history.push(destino) : navigate({ to: porDefecto });
   const [modo, setModo] = useState<Modo>("entrar");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -48,7 +55,10 @@ function AuthPage() {
     try {
       if (modo === "entrar") {
         const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
-        if (error) throw new Error(error.message.includes("Invalid") ? "Email o contraseña incorrectos" : error.message);
+        if (error)
+          throw new Error(
+            error.message.includes("Invalid") ? "Email o contraseña incorrectos" : error.message,
+          );
         volver("/");
       } else if (modo === "crear") {
         if (nombre.trim().length < 2) throw new Error("Escribí tu nombre (mínimo 2 letras)");
@@ -66,7 +76,9 @@ function AuthPage() {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
-        setAviso("Si el email está registrado, te llega un enlace para crear una nueva contraseña.");
+        setAviso(
+          "Si el email está registrado, te llega un enlace para crear una nueva contraseña.",
+        );
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Algo falló");
@@ -79,24 +91,47 @@ function AuthPage() {
     <div className="mx-auto max-w-md py-6">
       <div className="rounded-3xl border bg-card p-6 shadow-sm">
         <h1 className="font-display text-2xl font-extrabold">
-          {modo === "entrar" ? "Entrá a tu cuenta" : modo === "crear" ? "Creá tu cuenta" : "Recuperar contraseña"}
+          {modo === "entrar"
+            ? "Entrá a tu cuenta"
+            : modo === "crear"
+              ? "Creá tu cuenta"
+              : "Recuperar contraseña"}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {modo === "olvide" ? "Te enviamos un enlace a tu email." : "Es gratis. Publicá e intercambiá con vecinos de Moreno."}
+          {modo === "olvide"
+            ? "Te enviamos un enlace a tu email."
+            : "Es gratis. Publicá e intercambiá con vecinos de Moreno."}
         </p>
         {aviso ? (
-          <p className="mt-5 rounded-2xl bg-accent p-4 text-sm font-medium text-accent-foreground">{aviso}</p>
+          <p className="mt-5 rounded-2xl bg-accent p-4 text-sm font-medium text-accent-foreground">
+            {aviso}
+          </p>
         ) : (
           <form onSubmit={enviar} className="mt-5 space-y-4">
             {modo === "crear" && (
               <div className="space-y-1.5">
                 <Label htmlFor="nombre">Tu nombre o apodo</Label>
-                <Input id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} maxLength={60} required className="h-12" />
+                <Input
+                  id="nombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  maxLength={60}
+                  required
+                  className="h-12"
+                />
               </div>
             )}
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-12" />
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-12"
+              />
             </div>
             {modo !== "olvide" && (
               <div className="space-y-1.5">
@@ -112,24 +147,52 @@ function AuthPage() {
                 />
               </div>
             )}
-            <Button type="submit" disabled={cargando} className="h-12 w-full rounded-full text-base font-bold">
-              {cargando ? "Un momento…" : modo === "entrar" ? "Entrar" : modo === "crear" ? "Crear cuenta" : "Enviar enlace"}
+            <Button
+              type="submit"
+              disabled={cargando}
+              className="h-12 w-full rounded-full text-base font-bold"
+            >
+              {cargando
+                ? "Un momento…"
+                : modo === "entrar"
+                  ? "Entrar"
+                  : modo === "crear"
+                    ? "Crear cuenta"
+                    : "Enviar enlace"}
             </Button>
           </form>
         )}
         <div className="mt-5 flex flex-col gap-2 text-center text-sm">
           {modo !== "entrar" && (
-            <button className="font-semibold text-primary" onClick={() => { setModo("entrar"); setAviso(null); }}>
+            <button
+              className="font-semibold text-primary"
+              onClick={() => {
+                setModo("entrar");
+                setAviso(null);
+              }}
+            >
               Ya tengo cuenta, quiero entrar
             </button>
           )}
           {modo !== "crear" && (
-            <button className="font-semibold text-primary" onClick={() => { setModo("crear"); setAviso(null); }}>
+            <button
+              className="font-semibold text-primary"
+              onClick={() => {
+                setModo("crear");
+                setAviso(null);
+              }}
+            >
               No tengo cuenta, quiero crearla
             </button>
           )}
           {modo === "entrar" && (
-            <button className="text-muted-foreground" onClick={() => { setModo("olvide"); setAviso(null); }}>
+            <button
+              className="text-muted-foreground"
+              onClick={() => {
+                setModo("olvide");
+                setAviso(null);
+              }}
+            >
               Me olvidé la contraseña
             </button>
           )}

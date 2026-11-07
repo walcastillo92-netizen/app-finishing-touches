@@ -2,7 +2,13 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -115,7 +121,9 @@ export function CalificarModal({
                     onMouseLeave={() => setHoverPuntaje(null)}
                     className="p-1 text-2xl transition-transform hover:scale-110 focus:outline-none"
                   >
-                    <Star className={`h-8 w-8 ${activo ? "fill-amber-500 text-amber-500" : "text-muted-foreground/30"}`} />
+                    <Star
+                      className={`h-8 w-8 ${activo ? "fill-amber-500 text-amber-500" : "text-muted-foreground/30"}`}
+                    />
                   </button>
                 );
               })}
@@ -147,8 +155,19 @@ export function CalificarModal({
           </p>
 
           <div className="flex gap-2 pt-1">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="min-h-[44px] flex-1 rounded-full text-xs font-bold">Cancelar</Button>
-            <Button type="submit" disabled={enviando} className="min-h-[44px] flex-1 rounded-full text-xs font-bold">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="min-h-[44px] flex-1 rounded-full text-xs font-bold"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              disabled={enviando}
+              className="min-h-[44px] flex-1 rounded-full text-xs font-bold"
+            >
               {enviando ? "Guardando…" : "Publicar calificación"}
             </Button>
           </div>
