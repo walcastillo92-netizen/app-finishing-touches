@@ -85,8 +85,10 @@ export function CalificarModal({
       qc.invalidateQueries({ queryKey: ["contactos-venta"] });
       onOpenChange(false);
       setComentario("");
-    } catch (err: any) {
-      toast.error(err.message || "No se pudo registrar la calificación");
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error ? err.message : "No se pudo registrar la calificación",
+      );
     } finally {
       setEnviando(false);
     }
