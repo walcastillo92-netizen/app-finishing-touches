@@ -6,7 +6,14 @@ import { Negociacion } from "@/components/Negociacion";
 import { sb, PROPUESTA_SELECT, type Propuesta } from "@/lib/trueques";
 
 export const Route = createFileRoute("/_authenticated/trueques")({
-  head: () => ({ meta: [{ title: "Mis negociaciones · MORENO CERCA" }] }),
+  head: () => ({ meta: [
+    { title: "Mis negociaciones · MORENO CERCA" },
+    { name: "description", content: "Revisá tus propuestas y acuerdos de trueque con vecinos de Moreno." },
+    { property: "og:title", content: "Mis negociaciones · MORENO CERCA" },
+    { property: "og:description", content: "Tus propuestas y acuerdos de trueque entre vecinos." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+  ] }),
   component: Trueques,
 });
 
