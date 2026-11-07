@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      bloqueos: {
+        Row: {
+          bloqueado: string
+          bloqueador: string
+          creado_en: string
+        }
+        Insert: {
+          bloqueado: string
+          bloqueador?: string
+          creado_en?: string
+        }
+        Update: {
+          bloqueado?: string
+          bloqueador?: string
+          creado_en?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bloqueos_bloqueado_fkey"
+            columns: ["bloqueado"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bloqueos_bloqueador_fkey"
+            columns: ["bloqueador"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categorias: {
         Row: {
           activa: boolean
@@ -216,6 +249,45 @@ export type Database = {
           },
         ]
       }
+      mensajes_trueque: {
+        Row: {
+          autor_id: string
+          creado_en: string
+          id: string
+          propuesta_id: string
+          texto: string
+        }
+        Insert: {
+          autor_id?: string
+          creado_en?: string
+          id?: string
+          propuesta_id: string
+          texto: string
+        }
+        Update: {
+          autor_id?: string
+          creado_en?: string
+          id?: string
+          propuesta_id?: string
+          texto?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mensajes_trueque_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mensajes_trueque_propuesta_id_fkey"
+            columns: ["propuesta_id"]
+            isOneToOne: false
+            referencedRelation: "propuestas_trueque"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       municipios: {
         Row: {
           activo: boolean
@@ -243,34 +315,82 @@ export type Database = {
         }
         Relationships: []
       }
+      notificaciones: {
+        Row: {
+          creado_en: string
+          id: string
+          leida: boolean
+          propuesta_id: string | null
+          tipo: string
+          titulo: string
+          usuario_id: string
+        }
+        Insert: {
+          creado_en?: string
+          id?: string
+          leida?: boolean
+          propuesta_id?: string | null
+          tipo: string
+          titulo: string
+          usuario_id: string
+        }
+        Update: {
+          creado_en?: string
+          id?: string
+          leida?: boolean
+          propuesta_id?: string | null
+          tipo?: string
+          titulo?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notificaciones_propuesta_id_fkey"
+            columns: ["propuesta_id"]
+            isOneToOne: false
+            referencedRelation: "propuestas_trueque"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notificaciones_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       opiniones: {
         Row: {
           autor_id: string
           comentario: string | null
-          contacto_id: string
+          contacto_id: string | null
           creado_en: string
           estado: string
           id: string
+          propuesta_id: string | null
           puntaje: number
           vendedor_id: string
         }
         Insert: {
           autor_id: string
           comentario?: string | null
-          contacto_id: string
+          contacto_id?: string | null
           creado_en?: string
           estado?: string
           id?: string
+          propuesta_id?: string | null
           puntaje: number
           vendedor_id: string
         }
         Update: {
           autor_id?: string
           comentario?: string | null
-          contacto_id?: string
+          contacto_id?: string | null
           creado_en?: string
           estado?: string
           id?: string
+          propuesta_id?: string | null
           puntaje?: number
           vendedor_id?: string
         }
@@ -287,6 +407,13 @@ export type Database = {
             columns: ["contacto_id"]
             isOneToOne: true
             referencedRelation: "contactos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opiniones_propuesta_id_fkey"
+            columns: ["propuesta_id"]
+            isOneToOne: false
+            referencedRelation: "propuestas_trueque"
             referencedColumns: ["id"]
           },
           {

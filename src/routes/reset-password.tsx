@@ -10,6 +10,8 @@ export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
       { title: "Nueva contraseña · MORENO CERCA" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Creá una nueva contraseña para tu cuenta de MORENO CERCA." },
       { property: "og:title", content: "Nueva contraseña · MORENO CERCA" },
       { property: "og:description", content: "Recuperá el acceso a tu cuenta." },

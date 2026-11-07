@@ -10,6 +10,8 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Entrar · MORENO CERCA" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Entrá o creá tu cuenta en MORENO CERCA para publicar e intercambiar." },
       { property: "og:title", content: "Entrar · MORENO CERCA" },
       { property: "og:description", content: "Creá tu cuenta gratis y empezá a intercambiar con vecinos." },

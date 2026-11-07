@@ -9,6 +9,8 @@ export const Route = createFileRoute("/_authenticated/mis-publicaciones")({
   head: () => ({
     meta: [
       { title: "Mis publicaciones · MORENO CERCA" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "description", content: "Administrá tus publicaciones: editá, pausá o finalizá." },
       { property: "og:title", content: "Mis publicaciones · MORENO CERCA" },
       { property: "og:description", content: "Tus productos y servicios publicados." },

@@ -16,6 +16,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedMisPublicacionesRouteImport } from './routes/_authenticated/mis-publicaciones'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticated/publicar'
+import { Route as AuthenticatedTruequesRouteImport } from './routes/_authenticated/trueques'
 import { Route as PIdRouteImport } from './routes/p.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +54,11 @@ const AuthenticatedPublicarRoute = AuthenticatedPublicarRouteImport.update({
   path: '/publicar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTruequesRoute = AuthenticatedTruequesRouteImport.update({
+  id: '/trueques',
+  path: '/trueques',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const PIdRoute = PIdRouteImport.update({
   id: '/p/$id',
   path: '/p/$id',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/mis-publicaciones': typeof AuthenticatedMisPublicacionesRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/publicar': typeof AuthenticatedPublicarRoute
+  '/trueques': typeof AuthenticatedTruequesRoute
   '/p/$id': typeof PIdRoute
 }
 export interface FileRoutesByTo {
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/mis-publicaciones': typeof AuthenticatedMisPublicacionesRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/publicar': typeof AuthenticatedPublicarRoute
+  '/trueques': typeof AuthenticatedTruequesRoute
   '/p/$id': typeof PIdRoute
 }
 export interface FileRoutesById {
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/_authenticated/mis-publicaciones': typeof AuthenticatedMisPublicacionesRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
   '/_authenticated/publicar': typeof AuthenticatedPublicarRoute
+  '/_authenticated/trueques': typeof AuthenticatedTruequesRoute
   '/p/$id': typeof PIdRoute
 }
 export interface FileRouteTypes {
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/mis-publicaciones'
     | '/perfil'
     | '/publicar'
+    | '/trueques'
     | '/p/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/mis-publicaciones'
     | '/perfil'
     | '/publicar'
+    | '/trueques'
     | '/p/$id'
   id:
     | '__root__'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mis-publicaciones'
     | '/_authenticated/perfil'
     | '/_authenticated/publicar'
+    | '/_authenticated/trueques'
     | '/p/$id'
   fileRoutesById: FileRoutesById
 }
@@ -178,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPublicarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/trueques': {
+      id: '/_authenticated/trueques'
+      path: '/trueques'
+      fullPath: '/trueques'
+      preLoaderRoute: typeof AuthenticatedTruequesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/p/$id': {
       id: '/p/$id'
       path: '/p/$id'
@@ -192,12 +211,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMisPublicacionesRoute: typeof AuthenticatedMisPublicacionesRoute
   AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
   AuthenticatedPublicarRoute: typeof AuthenticatedPublicarRoute
+  AuthenticatedTruequesRoute: typeof AuthenticatedTruequesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMisPublicacionesRoute: AuthenticatedMisPublicacionesRoute,
   AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
   AuthenticatedPublicarRoute: AuthenticatedPublicarRoute,
+  AuthenticatedTruequesRoute: AuthenticatedTruequesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
