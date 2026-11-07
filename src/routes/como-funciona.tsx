@@ -91,8 +91,8 @@ function ComoFunciona() {
             Comprar, vender e intercambiar entre vecinos es así de simple.
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed opacity-90 sm:text-base">
-            Una guía rápida para aprovechar la comunidad de Moreno y coordinar
-            operaciones mano a mano.
+            Una guía rápida para aprovechar la comunidad de Moreno y coordinar operaciones mano a
+            mano.
           </p>
           <Button asChild variant="secondary" className="mt-6 min-h-11 rounded-full font-bold">
             <Link to="/">
@@ -112,10 +112,7 @@ function ComoFunciona() {
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {pasos.map(({ numero, icono: Icono, titulo, texto }) => (
-            <article
-              key={numero}
-              className="rounded-2xl border bg-card p-4 shadow-sm sm:p-5"
-            >
+            <article key={numero} className="rounded-2xl border bg-card p-4 shadow-sm sm:p-5">
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs font-extrabold tracking-widest text-primary">
                   PASO {numero}
@@ -125,9 +122,7 @@ function ComoFunciona() {
                 </span>
               </div>
               <h3 className="font-semibold">{titulo}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {texto}
-              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{texto}</p>
             </article>
           ))}
         </div>
@@ -141,10 +136,10 @@ function ComoFunciona() {
           <div>
             <h2 className="font-display text-xl font-bold">¿Cómo funciona una compra?</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              MORENO CERCA facilita el contacto entre vecinos; no cobra ni procesa
-              el pago. El comprador y el vendedor acuerdan los detalles por su
-              cuenta. Si concretan la operación, el vendedor la confirma en
-              Compras y ventas y luego se puede habilitar la valoración.
+              MORENO CERCA facilita el contacto entre vecinos; no cobra ni procesa el pago. El
+              comprador y el vendedor acuerdan los detalles por su cuenta. Si concretan la
+              operación, el vendedor la confirma en Compras y ventas y luego se puede habilitar la
+              valoración.
             </p>
           </div>
         </div>
@@ -155,9 +150,8 @@ function ComoFunciona() {
           <div>
             <h2 className="font-display text-xl font-bold">¿Y un trueque?</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Enviá una propuesta sobre una publicación. La otra persona puede
-              responderla y, si acepta, ambas partes confirman cuando el
-              intercambio se haya realizado.
+              Enviá una propuesta sobre una publicación. La otra persona puede responderla y, si
+              acepta, ambas partes confirman cuando el intercambio se haya realizado.
             </p>
           </div>
         </div>
