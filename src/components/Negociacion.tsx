@@ -313,15 +313,31 @@ function Chat({ p, me }: { p: Propuesta; me: string }) {
 }
 
 function Contacto({ id }: { id: string }) {
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
   const ver = useMutation({
     mutationFn: async () => {
       const { data, error } = await sb.rpc("contacto_trueque", { p_id: id });
       if (error) throw new Error(error.message);
       return (data as { whatsapp: string }).whatsapp;
     },
-    onSuccess: (wa) => window.open(`https://wa.me/${wa.replace(/\D/g, "")}`, "_blank", "noopener"),
+    onSuccess: (wa) => {
+      const numero = wa.replace(/\D/g, "");
+      if (numero) setWhatsappUrl(`https://wa.me/${numero}`);
+    },
     onError: (e: Error) => toast.error(e.message),
   });
+  if (whatsappUrl) {
+    return (
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex min-h-9 items-center rounded-full border px-3 text-sm font-medium"
+      >
+        Abrir WhatsApp
+      </a>
+    );
+  }
   return (
     <Button
       variant="outline"
@@ -330,7 +346,7 @@ function Contacto({ id }: { id: string }) {
       disabled={ver.isPending}
       onClick={() => ver.mutate()}
     >
-      Contactar por WhatsApp
+      {ver.isPending ? "Conectando…" : "Contactar por WhatsApp"}
     </Button>
   );
 }
