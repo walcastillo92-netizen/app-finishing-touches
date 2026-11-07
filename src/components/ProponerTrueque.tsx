@@ -68,7 +68,7 @@ export function ProponerTrueque({ publicacionId, vendedorId, modalidadPub }: { p
   if (session === null)
     return (
       <Button asChild className="h-14 w-full rounded-full text-base font-bold">
-        <Link to="/auth"><Repeat className="h-5 w-5" /> Entrá para proponer un trueque</Link>
+        <Link to="/auth" search={{ redirect: typeof window !== "undefined" ? window.location.pathname : undefined }}><Repeat className="h-5 w-5" /> Entrá para proponer un trueque</Link>
       </Button>
     );
 

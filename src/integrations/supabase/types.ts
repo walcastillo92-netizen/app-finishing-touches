@@ -717,6 +717,7 @@ export type Database = {
           descripcion: string | null
           destacada_hasta: string | null
           disponibilidad: string
+          es_demo: boolean
           estado: string
           faltantes: string[]
           id: string
@@ -740,6 +741,7 @@ export type Database = {
           descripcion?: string | null
           destacada_hasta?: string | null
           disponibilidad?: string
+          es_demo?: boolean
           estado?: string
           faltantes?: string[]
           id?: string
@@ -763,6 +765,7 @@ export type Database = {
           descripcion?: string | null
           destacada_hasta?: string | null
           disponibilidad?: string
+          es_demo?: boolean
           estado?: string
           faltantes?: string[]
           id?: string

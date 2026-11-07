@@ -64,7 +64,7 @@ function Inicio() {
       let q = supabase
         .from("publicaciones")
         .select(
-          "id, titulo, precio_ars, condicion, modalidad_trueque, publicado_en, zonas(nombre), publicacion_fotos(storage_path, orden)",
+          "id, titulo, precio_ars, condicion, modalidad_trueque, publicado_en, es_demo, zonas(nombre), publicacion_fotos(storage_path, orden)",
         )
         .eq("estado", "publicada")
         .neq("disponibilidad", "vendido")

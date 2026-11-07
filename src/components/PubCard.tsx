@@ -3,6 +3,7 @@ import { MapPin, Repeat, ImageOff } from "lucide-react";
 import { esNueva, fotoUrl, formatARS, MODALIDAD_LABEL, type ModalidadTrueque } from "@/lib/catalog";
 
 export type PubResumen = {
+  es_demo?: boolean;
   id: string;
   titulo: string | null;
   precio_ars: number | null;
@@ -30,7 +31,10 @@ export function PubCard({ p }: { p: PubResumen }) {
             <ImageOff className="h-8 w-8" />
           </div>
         )}
-        {esNueva(p.publicado_en) && (
+        {p.es_demo && (
+          <span className="absolute right-2 top-2 rounded-md bg-foreground/80 px-2 py-0.5 text-[11px] font-extrabold tracking-wide text-primary-foreground">BETA · DEMO</span>
+        )}
+        {!p.es_demo && esNueva(p.publicado_en) && (
           <span className="absolute left-2 top-2 rounded-full bg-secondary px-2 py-0.5 text-[11px] font-bold text-secondary-foreground">
             Nuevo
           </span>

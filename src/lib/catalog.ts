@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { demoImagen } from "@/lib/demoImages";
 
 export const categoriasQuery = queryOptions({
   queryKey: ["categorias"],
@@ -34,6 +35,7 @@ export const zonasQuery = queryOptions({
 
 export function fotoUrl(path: string | null | undefined, bucket = "publicaciones") {
   if (!path) return null;
+  if (path.startsWith("/demo/")) return demoImagen(path);
   if (path.startsWith("http")) return path;
   return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
