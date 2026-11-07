@@ -8,7 +8,13 @@ import { PubCard, type PubResumen } from "@/components/PubCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type Busqueda = { q?: string | undefined; cat?: string | undefined; zona?: string | undefined; modo?: string | undefined; cond?: string | undefined };
+type Busqueda = {
+  q?: string | undefined;
+  cat?: string | undefined;
+  zona?: string | undefined;
+  modo?: string | undefined;
+  cond?: string | undefined;
+};
 
 export const Route = createFileRoute("/")({
   validateSearch: (s: Record<string, unknown>): Busqueda => ({
@@ -25,7 +31,8 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
-        content: "Comprá, vendé e intercambiá con vecinos de Moreno. Mano a mano o con diferencia en efectivo.",
+        content:
+          "Comprá, vendé e intercambiá con vecinos de Moreno. Mano a mano o con diferencia en efectivo.",
       },
       { property: "og:title", content: "MORENO CERCA · Trueques entre vecinos" },
       {
@@ -59,7 +66,8 @@ function Inicio() {
   const res = useInfiniteQuery({
     queryKey: ["feed", search],
     initialPageParam: 0,
-    getNextPageParam: (last: PubResumen[], all) => (last.length === POR_PAGINA ? all.length : undefined),
+    getNextPageParam: (last: PubResumen[], all) =>
+      last.length === POR_PAGINA ? all.length : undefined,
     queryFn: async ({ pageParam }) => {
       let q = supabase
         .from("publicaciones")
@@ -136,19 +144,35 @@ function Inicio() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <select className={sel} value={search.zona ?? ""} onChange={(e) => set({ zona: e.target.value || undefined })}>
+        <select
+          className={sel}
+          value={search.zona ?? ""}
+          onChange={(e) => set({ zona: e.target.value || undefined })}
+        >
           <option value="">Todo Moreno</option>
           {zonas?.map((z) => (
-            <option key={z.id} value={z.id}>{z.nombre}</option>
+            <option key={z.id} value={z.id}>
+              {z.nombre}
+            </option>
           ))}
         </select>
-        <select className={sel} value={search.cat ?? ""} onChange={(e) => set({ cat: e.target.value || undefined })}>
+        <select
+          className={sel}
+          value={search.cat ?? ""}
+          onChange={(e) => set({ cat: e.target.value || undefined })}
+        >
           <option value="">Todas las categorías</option>
           {cats?.map((c) => (
-            <option key={c.id} value={c.id}>{c.nombre}</option>
+            <option key={c.id} value={c.id}>
+              {c.nombre}
+            </option>
           ))}
         </select>
-        <select className={sel} value={search.cond ?? ""} onChange={(e) => set({ cond: e.target.value || undefined })}>
+        <select
+          className={sel}
+          value={search.cond ?? ""}
+          onChange={(e) => set({ cond: e.target.value || undefined })}
+        >
           <option value="">Nuevo o usado</option>
           <option value="nuevo">Nuevo</option>
           <option value="usado">Usado</option>
@@ -200,7 +224,12 @@ function Inicio() {
           </div>
           {res.hasNextPage && (
             <div className="text-center">
-              <Button variant="outline" className="rounded-full" disabled={res.isFetchingNextPage} onClick={() => res.fetchNextPage()}>
+              <Button
+                variant="outline"
+                className="rounded-full"
+                disabled={res.isFetchingNextPage}
+                onClick={() => res.fetchNextPage()}
+              >
                 {res.isFetchingNextPage ? "Cargando…" : "Ver más"}
               </Button>
             </div>

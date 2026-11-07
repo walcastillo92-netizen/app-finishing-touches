@@ -1,0 +1,93 @@
+name: CI - Integración MORENO CERCA
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  push:
+    branches:
+      - integracion/ventas-reputacion-seguridad
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Corregir formato y guardar en la rama del PR
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Descargar rama del PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Instalar dependencias
+        run: bun install --frozen-lockfile
+
+      - name: Aplicar formato Prettier
+        run: bun run format
+
+      - name: Guardar correcciones en la rama
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: |
+          if git diff --quiet; then
+            echo "No hay cambios de formato para guardar."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "style: aplicar formato Prettier"
+            git push origin "HEAD:${BRANCH_NAME}"
+          fi
+
+  quality:
+    name: Lint, tests y build
+    needs: format
+    if: always() && (github.event_name != 'pull_request' || needs.format.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Descargar código actualizado
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Instalar dependencias
+        run: bun install --frozen-lockfile
+
+      - name: Revisar código (ESLint)
+        run: bun run lint
+
+      - name: Ejecutar pruebas (Vitest)
+        run: bun run test
+
+      - name: Compilar producción (Vite)
+        run: bun run build
+
+      - name: Compilar vista de pruebas DEV
+        run: bun run build:dev

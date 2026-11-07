@@ -3,11 +3,32 @@
  * Se generan por código (SVG) a partir de rutas como "/demo/demo-01-bicicleta-1.svg".
  * Para quitar las demos: delete from public.publicaciones where es_demo;  (y borrar este archivo).
  */
-type Demo = [emoji: string, titulo: string, color1: string, color2: string, rubro: string, detalle: string];
+type Demo = [
+  emoji: string,
+  titulo: string,
+  color1: string,
+  color2: string,
+  rubro: string,
+  detalle: string,
+];
 
 const DEMOS: Record<string, Demo> = {
-  bicicleta: ["🚲", "Bicicleta rodado 26", "#2438d8", "#6f86ff", "Vehículos", "Usada · buen estado"],
-  taladro: ["🛠️", "Taladro percutor con valija", "#c2410c", "#fb923c", "Herramientas", "Con brocas incluidas"],
+  bicicleta: [
+    "🚲",
+    "Bicicleta rodado 26",
+    "#2438d8",
+    "#6f86ff",
+    "Vehículos",
+    "Usada · buen estado",
+  ],
+  taladro: [
+    "🛠️",
+    "Taladro percutor con valija",
+    "#c2410c",
+    "#fb923c",
+    "Herramientas",
+    "Con brocas incluidas",
+  ],
   cochecito: ["👶", "Cochecito de bebé plegable", "#be185d", "#f472b6", "Hogar", "Plegado fácil"],
   celular: ["📱", "Celular Android 64 GB", "#0f766e", "#2dd4bf", "Tecnología", "Con cargador"],
   guitarra: ["🎸", "Clases de guitarra", "#7c3aed", "#a78bfa", "Servicios", "Clases de 2 horas"],

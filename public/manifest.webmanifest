@@ -1,1 +1,10 @@
-{"name":"Moreno Cerca – Trueques","short_name":"Moreno Cerca","start_url":"/","display":"standalone","background_color":"#f5f6fc","theme_color":"#2438d8","lang":"es-AR","icons":[{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
+{
+  "name": "Moreno Cerca – Trueques",
+  "short_name": "Moreno Cerca",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f6fc",
+  "theme_color": "#2438d8",
+  "lang": "es-AR",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

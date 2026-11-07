@@ -52,7 +52,10 @@ function Perfil() {
 
   async function guardar(e: React.FormEvent) {
     e.preventDefault();
-    if (f.nombre_publico.trim().length < 2) { toast.error("El nombre debe tener al menos 2 letras"); return; }
+    if (f.nombre_publico.trim().length < 2) {
+      toast.error("El nombre debe tener al menos 2 letras");
+      return;
+    }
     setGuardando(true);
     const { error } = await supabase
       .from("perfiles")
@@ -64,7 +67,10 @@ function Perfil() {
       })
       .eq("id", userId);
     setGuardando(false);
-    if (error) { toast.error("No pudimos guardar: " + error.message); return; }
+    if (error) {
+      toast.error("No pudimos guardar: " + error.message);
+      return;
+    }
     toast.success("Perfil guardado");
     qc.invalidateQueries({ queryKey: ["perfil", userId] });
   }
@@ -73,9 +79,14 @@ function Perfil() {
     try {
       const img = await procesarImagen(file, 512);
       const path = `${userId}/avatar-${Date.now()}.jpg`;
-      const up = await supabase.storage.from("avatares").upload(path, img.blob, { contentType: "image/jpeg" });
+      const up = await supabase.storage
+        .from("avatares")
+        .upload(path, img.blob, { contentType: "image/jpeg" });
       if (up.error) throw up.error;
-      const { error } = await supabase.from("perfiles").update({ avatar_url: path }).eq("id", userId);
+      const { error } = await supabase
+        .from("perfiles")
+        .update({ avatar_url: path })
+        .eq("id", userId);
       if (error) throw error;
       toast.success("Foto actualizada");
       qc.invalidateQueries({ queryKey: ["perfil", userId] });
@@ -91,29 +102,60 @@ function Perfil() {
       <h1 className="font-display text-2xl font-extrabold">Mi perfil</h1>
       <label className="relative mx-auto block h-24 w-24 cursor-pointer overflow-hidden rounded-full bg-muted">
         {perfil.avatar_url ? (
-          <img src={fotoUrl(perfil.avatar_url, "avatares")!} alt="Tu foto" className="h-full w-full object-cover" />
+          <img
+            src={fotoUrl(perfil.avatar_url, "avatares")!}
+            alt="Tu foto"
+            className="h-full w-full object-cover"
+          />
         ) : (
-          <span className="flex h-full items-center justify-center text-3xl font-bold">{perfil.nombre_publico[0]}</span>
+          <span className="flex h-full items-center justify-center text-3xl font-bold">
+            {perfil.nombre_publico[0]}
+          </span>
         )}
         <span className="absolute bottom-0 inset-x-0 flex justify-center bg-foreground/60 py-1 text-background">
           <Camera className="h-4 w-4" />
         </span>
-        <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => e.target.files?.[0] && subirAvatar(e.target.files[0])} />
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className="hidden"
+          onChange={(e) => e.target.files?.[0] && subirAvatar(e.target.files[0])}
+        />
       </label>
       <div className="space-y-1.5">
         <Label htmlFor="n">Nombre público</Label>
-        <Input id="n" value={f.nombre_publico} maxLength={60} onChange={(e) => setF({ ...f, nombre_publico: e.target.value })} className="h-12" />
+        <Input
+          id="n"
+          value={f.nombre_publico}
+          maxLength={60}
+          onChange={(e) => setF({ ...f, nombre_publico: e.target.value })}
+          className="h-12"
+        />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="z">Tu barrio (aproximado)</Label>
-        <select id="z" className="h-12 w-full rounded-md border bg-card px-3" value={f.zona_id} onChange={(e) => setF({ ...f, zona_id: e.target.value })}>
+        <select
+          id="z"
+          className="h-12 w-full rounded-md border bg-card px-3"
+          value={f.zona_id}
+          onChange={(e) => setF({ ...f, zona_id: e.target.value })}
+        >
           <option value="">Elegí tu barrio</option>
-          {zonas?.map((z) => <option key={z.id} value={z.id}>{z.nombre}</option>)}
+          {zonas?.map((z) => (
+            <option key={z.id} value={z.id}>
+              {z.nombre}
+            </option>
+          ))}
         </select>
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="t">Soy</Label>
-        <select id="t" className="h-12 w-full rounded-md border bg-card px-3" value={f.tipo} onChange={(e) => setF({ ...f, tipo: e.target.value })}>
+        <select
+          id="t"
+          className="h-12 w-full rounded-md border bg-card px-3"
+          value={f.tipo}
+          onChange={(e) => setF({ ...f, tipo: e.target.value })}
+        >
           <option value="vecino">Vecino/a</option>
           <option value="vendedor">Emprendedor/a</option>
           <option value="comercio">Comercio</option>
@@ -121,9 +163,18 @@ function Perfil() {
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="d">Presentación breve</Label>
-        <Textarea id="d" value={f.descripcion} maxLength={500} rows={3} onChange={(e) => setF({ ...f, descripcion: e.target.value })} placeholder="Contá qué te gusta intercambiar…" />
+        <Textarea
+          id="d"
+          value={f.descripcion}
+          maxLength={500}
+          rows={3}
+          onChange={(e) => setF({ ...f, descripcion: e.target.value })}
+          placeholder="Contá qué te gusta intercambiar…"
+        />
       </div>
-      <p className="text-xs text-muted-foreground">Tu email nunca se muestra. Los vecinos solo ven tu nombre, foto, barrio y presentación.</p>
+      <p className="text-xs text-muted-foreground">
+        Tu email nunca se muestra. Los vecinos solo ven tu nombre, foto, barrio y presentación.
+      </p>
       <Button type="submit" disabled={guardando} className="h-12 w-full rounded-full font-bold">
         {guardando ? "Guardando…" : "Guardar perfil"}
       </Button>

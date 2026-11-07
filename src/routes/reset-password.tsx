@@ -27,11 +27,17 @@ function ResetPage() {
 
   async function guardar(e: React.FormEvent) {
     e.preventDefault();
-    if (pass.length < 8) { toast.error("La contraseña debe tener al menos 8 caracteres"); return; }
+    if (pass.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
     setCargando(true);
     const { error } = await supabase.auth.updateUser({ password: pass });
     setCargando(false);
-    if (error) { toast.error("El enlace venció o no es válido. Pedí uno nuevo."); return; }
+    if (error) {
+      toast.error("El enlace venció o no es válido. Pedí uno nuevo.");
+      return;
+    }
     toast.success("¡Listo! Ya podés usar tu nueva contraseña.");
     navigate({ to: "/" });
   }
@@ -42,7 +48,14 @@ function ResetPage() {
         <h1 className="font-display text-2xl font-extrabold">Nueva contraseña</h1>
         <div className="space-y-1.5">
           <Label htmlFor="pass">Contraseña nueva</Label>
-          <Input id="pass" type="password" autoComplete="new-password" value={pass} onChange={(e) => setPass(e.target.value)} className="h-12" />
+          <Input
+            id="pass"
+            type="password"
+            autoComplete="new-password"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            className="h-12"
+          />
         </div>
         <Button type="submit" disabled={cargando} className="h-12 w-full rounded-full font-bold">
           Guardar contraseña
