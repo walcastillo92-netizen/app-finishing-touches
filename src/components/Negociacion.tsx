@@ -447,15 +447,13 @@ function Ayuda({
   const [detalle, setDetalle] = useState("");
   const denunciar = useMutation({
     mutationFn: async () => {
-      const { error } = await sb
-        .from("denuncias")
-        .insert({
-          denunciante_id: me,
-          tipo_objeto: "perfil",
-          objeto_id: otroId,
-          motivo,
-          detalle: detalle.trim() || null,
-        });
+      const { error } = await sb.from("denuncias").insert({
+        denunciante_id: me,
+        tipo_objeto: "perfil",
+        objeto_id: otroId,
+        motivo,
+        detalle: detalle.trim() || null,
+      });
       if (error) throw new Error(error.message);
     },
     onSuccess: () => {
