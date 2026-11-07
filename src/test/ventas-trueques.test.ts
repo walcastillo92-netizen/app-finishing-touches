@@ -52,15 +52,16 @@ describe("validarCalificacion", () => {
   });
 
   it("rechaza la autovaloración", () => {
-    expect(
-      validarCalificacion({ ...baseCalificacion, valoradoId: "comprador-1" }),
-    ).toMatchObject({ valida: false, motivo: expect.stringContaining("propia") });
+    expect(validarCalificacion({ ...baseCalificacion, valoradoId: "comprador-1" })).toMatchObject({
+      valida: false,
+      motivo: expect.stringContaining("propia"),
+    });
   });
 
   it("rechaza operaciones no confirmadas", () => {
-    expect(
-      validarCalificacion({ ...baseCalificacion, estadoOperacion: "iniciado" }),
-    ).toMatchObject({ valida: false, motivo: expect.stringContaining("confirmadas") });
+    expect(validarCalificacion({ ...baseCalificacion, estadoOperacion: "iniciado" })).toMatchObject(
+      { valida: false, motivo: expect.stringContaining("confirmadas") },
+    );
   });
 });
 
